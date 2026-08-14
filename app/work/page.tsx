@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DocumentShell, MediaWell, SquiggleLink } from "@/components/layout/DocumentShell";
+import { ExperienceList } from "@/components/ui/ExperienceList";
 import { PhoneGallery } from "@/components/ui/PhoneMocks";
+import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
 import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 
@@ -67,40 +69,12 @@ export default function WorkPage() {
       </section>
 
       <section id="experience" className="scroll-mt-32 lg:scroll-mt-24 mt-20">
-        <p className="text-sm text-muted">Work experience</p>
-        <ul className="mt-6">
-          {site.about.experience.map((item) => (
-            <li
-              key={`${item.org}-${item.role}`}
-              className="dotted flex flex-wrap items-baseline justify-between gap-2 py-4"
-            >
-              <p>
-                {item.role}, {item.org}
-              </p>
-              <p className="text-muted">{item.years}</p>
-            </li>
-          ))}
-        </ul>
+        <p className="text-sm text-muted">Experience</p>
+        <ExperienceList className="mt-8" />
       </section>
 
       <section id="testimonial" className="scroll-mt-32 lg:scroll-mt-24 mt-20">
-        <p className="text-sm text-muted">Testimonial</p>
-        <ul className="mt-6">
-          {site.testimonials.map((item) => (
-            <li key={item.name} className="dotted py-8">
-              <p className="text-[17px] leading-7">{item.quote}</p>
-              <div className="mt-4 flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-well text-xs">
-                  {item.initials}
-                </span>
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-muted">{item.title}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <TestimonialCarousel />
         <p className="mt-12 text-[17px] leading-7 text-muted">
           If you&apos;re building products that require thoughtful design, I&apos;d love to talk.{" "}
           <SquiggleLink href={booking}>Booking a call</SquiggleLink> or{" "}

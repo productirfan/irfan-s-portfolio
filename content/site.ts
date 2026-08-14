@@ -26,18 +26,48 @@ export const site = {
   ],
   testimonials: [
     {
+      id: "priya",
       quote:
-        "Irfan made the system visible without making it heavier. Engineering finally had a picture we could ship against.",
+        "Irfan made the system visible without making it heavier. Engineering finally had a picture we could ship against — his attention to detail ensured a smooth rollout.",
       name: "Priya Mehta",
-      title: "PM · Auriga",
+      role: "Product Manager",
+      company: "Auriga",
       initials: "PM",
+      avatarTone: "#D4A574",
+      companyLogo: "/org/auriga.svg",
     },
     {
+      id: "arjun",
       quote:
         "The voice work wasn’t pretty screens — it was interruption, latency, and recovery. That’s why the product felt real on a call.",
       name: "Arjun Rao",
-      title: "Founding engineer · Calling",
+      role: "Founding Engineer",
+      company: "Calling",
       initials: "AR",
+      avatarTone: "#7C9CBF",
+      companyLogo: "/org/concentio.svg",
+    },
+    {
+      id: "meera",
+      quote:
+        "Working with Irfan on our enterprise admin surfaces set a new standard. He designs systems people can actually operate under pressure.",
+      name: "Meera Shah",
+      role: "Design Lead",
+      company: "Concentio",
+      initials: "MS",
+      avatarTone: "#C4A0A8",
+      companyLogo: "/org/concentio.svg",
+    },
+    {
+      id: "dev",
+      quote:
+        "Collaborating with Irfan on 0→1 AI workflows was a game-changer. He kept the complex model honest without drowning the interface.",
+      name: "Dev Kapoor",
+      role: "Engineering Manager",
+      company: "Scry AI",
+      initials: "DK",
+      avatarTone: "#8FA88A",
+      companyLogo: "/org/scry.svg",
     },
   ],
   about: {
@@ -91,19 +121,36 @@ export const site = {
     ],
     experience: [
       {
-        role: "Product Designer",
+        role: "Product designer",
         org: "Scry AI",
-        years: "2024 — Present",
+        years: "2024 — NOW",
+        logo: "/org/scry.svg",
+        description:
+          "Designing AI enterprise workflows and 0→1 product surfaces that turn complex systems into clear, shippable interfaces.",
       },
       {
-        role: "Product Designer",
+        role: "Product designer",
         org: "Concentio",
         years: "2022 — 2024",
+        logo: "/org/concentio.svg",
+        description:
+          "Led product design for SaaS and ops tooling, shipping end-to-end flows used daily by growing customer teams.",
       },
       {
-        role: "Product Designer",
-        org: "Studio / 0→1",
+        role: "Product designer",
+        org: "Auriga",
         years: "2021 — 2022",
+        logo: "/org/auriga.svg",
+        description:
+          "Designed agent and workflow surfaces that made permissions, state, and recovery visible without overwhelming the UI.",
+      },
+      {
+        role: "Product designer",
+        org: "Studio",
+        years: "2019 — 2021",
+        logo: "/org/studio.svg",
+        description:
+          "Built 0→1 product interfaces across early-stage SaaS, from first flows through polished handoff-ready systems.",
       },
     ],
   },
