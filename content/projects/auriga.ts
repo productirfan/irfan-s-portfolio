@@ -1,0 +1,413 @@
+import type { Project } from "../types";
+
+export const auriga: Project = {
+  slug: "auriga",
+  title: "Auriga",
+  oneLiner:
+    "An AI knowledge workspace where documents, sources, and the web become one conversation.",
+  year: "2025",
+  role: "Product Designer",
+  team: "PM, 2 engineers, research",
+  platform: "Web · Enterprise",
+  domain: "AI / Knowledge",
+  index: 1,
+  heroStyle: "workspace",
+  impactLine: "From scattered sources to a single, permissioned workspace.",
+  explorerLabel: "Knowledge workspace",
+  nextProject: "ai-calling",
+  navItems: [
+    { id: "overview", label: "Overview" },
+    { id: "problem", label: "Problem" },
+    { id: "research", label: "Research" },
+    { id: "thinking", label: "Thinking" },
+    { id: "design", label: "Design" },
+    { id: "system", label: "System" },
+    { id: "impact", label: "Impact" },
+  ],
+  quickReadSectionIds: [
+    "hero",
+    "snapshot",
+    "problem",
+    "decisions",
+    "why",
+    "impact",
+    "next",
+  ],
+  sections: [
+    {
+      type: "hero",
+      id: "hero",
+      nav: "overview",
+      kicker: "Case study · AI workspace",
+      title: "Auriga",
+      statement:
+        "Enterprise knowledge is not a search box. It is a workspace with memory, permissions, and an agent that has to know what it is allowed to see.",
+    },
+    {
+      type: "snapshot",
+      id: "snapshot",
+      nav: "overview",
+      description:
+        "A knowledge workspace where people ask in natural language across documents, connected sources, and the web.",
+      role: "Product Designer",
+      timeline: "[ADD PROJECT TIMELINE]",
+      team: "[ADD TEAM]",
+      platform: "Web · Enterprise",
+      contribution:
+        "Product architecture, AI interaction model, workspace IA, agent setup, and the visual system for a dense enterprise surface.",
+    },
+    {
+      type: "problem",
+      id: "problem",
+      nav: "problem",
+      kicker: "Problem",
+      title: "The existing workflow forced people to jump between surfaces that did not share context.",
+      statement:
+        "Questions lived in chat. Evidence lived in files. Permissions lived in IT. The model had no product around it.",
+      body: [
+        "Knowledge work in the enterprise is not a single query. It is a sequence: gather sources, constrain who can see them, instruct an agent, then inspect the answer against the original documents.",
+        "Treating that as a chatbot would have made the model look clever and the work remain fragmented.",
+      ],
+    },
+    {
+      type: "context",
+      id: "context",
+      nav: "problem",
+      kicker: "Context",
+      title: "The product had to hold documents, people, and an agent in the same frame.",
+      body: [
+        "Clients arrived with a request, a pile of requirements, and an expectation that “AI on our documents” would be enough.",
+        "The design problem was the opposite: give the agent a room to work in, with visible sources, visible users, and a setup that is not buried in settings.",
+      ],
+    },
+    {
+      type: "research-evidence",
+      id: "research",
+      nav: "research",
+      title: "Evidence, not a research deck",
+      layers: [
+        {
+          id: "interviews",
+          label: "Interviews & intake",
+          countLabel: "[ADD INTERVIEW COUNT] conversations",
+          evidence: [
+            "People could not tell whether an answer came from a contract, a wiki, or the open web.",
+            "Admin setup and end-user asking were treated as the same job — they are not.",
+            "[ADD USER QUOTE]",
+          ],
+        },
+        {
+          id: "problems",
+          label: "Recurring problems",
+          countLabel: "7 friction patterns",
+          evidence: [
+            "Context collapsed the moment someone switched from a document to a chat.",
+            "Permissions were invisible until something failed.",
+            "Agent instructions were written once, then forgotten.",
+            "Source quality and recency were not part of the interface.",
+          ],
+        },
+        {
+          id: "opportunities",
+          label: "Opportunity areas",
+          countLabel: "3 product bets",
+          evidence: [
+            "A workspace object that owns sources, people, and the agent.",
+            "Setup as a first-class flow, not a settings afterthought.",
+            "Answers that stay attached to evidence.",
+          ],
+        },
+        {
+          id: "direction",
+          label: "Strategic direction",
+          countLabel: "1 model",
+          evidence: [
+            "Design the product around the workspace, not around the prompt.",
+          ],
+        },
+      ],
+    },
+    {
+      type: "sticky-story",
+      id: "thinking",
+      nav: "thinking",
+      title: "The interface had to change as the understanding changed.",
+      steps: [
+        {
+          id: "s1",
+          kicker: "Step 01 · Problem",
+          title: "The original workflow was a pile of files and a chat window.",
+          body: "Nothing in the UI explained the relationship between a request, a document set, and the model that would answer it.",
+          uiState: "problem",
+        },
+        {
+          id: "s2",
+          kicker: "Step 02 · Insight",
+          title: "Friction was not copy. It was missing structure.",
+          body: "People did not need a smarter prompt. They needed to see what the agent could see — and who else was in the room.",
+          uiState: "insight",
+        },
+        {
+          id: "s3",
+          kicker: "Step 03 · Solution",
+          title: "The workspace became the primary object.",
+          body: "Request, sources, agent, and user group assemble in one surface. Asking is the last step, not the first.",
+          uiState: "solution",
+        },
+        {
+          id: "s4",
+          kicker: "Step 04 · Outcome",
+          title: "The product reads as a system, not a demo.",
+          body: "A visitor — or a new teammate — can reconstruct how knowledge is allowed to move.",
+          uiState: "outcome",
+        },
+      ],
+    },
+    {
+      type: "workspace-assembly",
+      id: "system",
+      nav: "system",
+      title: "The workspace builds itself",
+      intro:
+        "Scroll the product into existence. Each layer is a real object in Auriga — not a metaphor.",
+      steps: [
+        {
+          id: "request",
+          label: "Client request",
+          title: "Work starts as a request, not a blank chat.",
+          body: "The first object is intent: what this workspace is for, and what “done” looks like.",
+        },
+        {
+          id: "documents",
+          label: "Documents / requirements",
+          title: "Requirements become source material.",
+          body: "Files are not attachments on the side. They are the floor the agent stands on.",
+        },
+        {
+          id: "workspace",
+          label: "Workspace",
+          title: "A room that can hold the rest.",
+          body: "The workspace is the product object: named, permissioned, inspectable.",
+        },
+        {
+          id: "agent",
+          label: "Agent setup",
+          title: "Instructions are a surface, not a secret.",
+          body: "Role, tone, tools, and limits are configured in the same place people will later ask questions.",
+        },
+        {
+          id: "sources",
+          label: "Knowledge sources",
+          title: "Documents, connected systems, and the web are distinct.",
+          body: "The UI has to say which corpus an answer is allowed to use — and when it left the building.",
+        },
+        {
+          id: "users",
+          label: "User group",
+          title: "Who is in the room changes what the model can say.",
+          body: "Access is part of the interaction design, not an admin console two clicks away.",
+        },
+        {
+          id: "interaction",
+          label: "AI interaction",
+          title: "Asking is the last layer.",
+          body: "Natural language sits on top of a structure the user can still see.",
+        },
+      ],
+    },
+    {
+      type: "exploration",
+      id: "exploration",
+      nav: "design",
+      title: "The messy middle",
+      intro:
+        "Three directions were real. Only one could carry enterprise permissions without pretending the chat was the product.",
+      items: [
+        {
+          id: "e1",
+          title: "Exploration 01 · Chat-first",
+          status: "rejected",
+          tested: "A prominent prompt with documents as a drawer.",
+          outcome: "Fast to demo. Impossible to explain permissions, sources, or setup.",
+          learned: "Speed of asking is not the same as clarity of the system.",
+          influence: "Kept a strong composer — demoted it until the workspace existed.",
+        },
+        {
+          id: "e2",
+          title: "Exploration 02 · File manager + assistant",
+          status: "promising",
+          tested: "A library of documents with a side panel agent.",
+          outcome: "Sources were visible. The agent still felt bolted on.",
+          learned: "Two products sharing a window is not one workspace.",
+          influence: "Source inspection and grouping survived into the selected model.",
+        },
+        {
+          id: "e3",
+          title: "Exploration 03 · Workspace as object",
+          status: "selected",
+          tested: "Request → sources → agent → people → conversation, as one assembly.",
+          outcome: "Heavier first session. Much clearer mental model after setup.",
+          learned: "Enterprise AI earns trust by showing its room, not by hiding it.",
+          influence: "Became the architecture of the shipped product.",
+        },
+      ],
+    },
+    {
+      type: "decision-explorer",
+      id: "decisions",
+      nav: "thinking",
+      title: "A decision that shaped the product",
+      prompt: "Where should agent setup live?",
+      options: [
+        {
+          id: "a",
+          label: "Option A · Buried in settings",
+          status: "rejected",
+          pros: ["Familiar pattern", "Keeps the main canvas clean"],
+          cons: ["Setup becomes invisible", "Instructions drift from the conversation"],
+          constraints: ["Enterprise clients needed to audit how the agent was configured"],
+          why: "Rejected because configuration is part of the work, not a preference.",
+        },
+        {
+          id: "b",
+          label: "Option B · One-time onboarding wizard",
+          status: "considered",
+          pros: ["Guided", "Good for first run"],
+          cons: ["Implies setup is finished", "Hard to revisit mid-work"],
+          constraints: ["Workspaces evolve as sources and people change"],
+          why: "Kept as a first-run path, not as the home of the model.",
+        },
+        {
+          id: "c",
+          label: "Option C · Setup as a workspace layer",
+          status: "selected",
+          pros: ["Always inspectable", "Tied to sources and user groups"],
+          cons: ["More UI to learn", "Requires restraint so it does not become a dashboard"],
+          constraints: ["Had to remain usable for people who only want to ask a question"],
+          why: "Selected: the agent is a member of the workspace, so its setup belongs in the same object.",
+        },
+      ],
+    },
+    {
+      type: "interactive-prototype",
+      id: "prototype",
+      nav: "design",
+      title: "A three-state replica of asking with context",
+      steps: [
+        {
+          id: "open",
+          label: "Open",
+          body: "The workspace exists before the prompt. Request, sources, and people are already in the room.",
+        },
+        {
+          id: "choose",
+          label: "Choose",
+          body: "Selecting a source constrains the agent. The composer is still empty — that is the point.",
+        },
+        {
+          id: "ask",
+          label: "Ask",
+          body: "The question lands on a visible corpus. The answer has somewhere to point back to.",
+        },
+      ],
+    },
+    {
+      type: "design-principles",
+      id: "principles",
+      nav: "design",
+      title: "Principles that held the density together",
+      principles: [
+        {
+          number: "01",
+          title: "Show the room.",
+          body: "If the agent can see it, the user should be able to find it.",
+        },
+        {
+          number: "02",
+          title: "Setup is product.",
+          body: "Instructions, sources, and people are not metadata.",
+        },
+        {
+          number: "03",
+          title: "Answers stay attached.",
+          body: "A response without a source path is a liability.",
+        },
+      ],
+    },
+    {
+      type: "why-this-way",
+      id: "why",
+      nav: "thinking",
+      title: "Why I designed it this way",
+      intro: "For PMs and design managers: the few decisions that actually mattered.",
+      items: [
+        {
+          decision: "Workspace as the primary object, not the prompt.",
+          context: "Stakeholders wanted a chat that “just worked on our files.”",
+          tradeoff: "Slower first impression versus a durable mental model.",
+          reasoning:
+            "Without a workspace, permissions and sources had nowhere to live.",
+          result:
+            "Setup, asking, and audit sit on one object. [ADD FINAL OUTCOME]",
+        },
+        {
+          decision: "Separate documents, connected sources, and the web.",
+          context: "A single “knowledge” bucket was the easy IA.",
+          tradeoff: "More labels versus fewer dangerous answers.",
+          reasoning:
+            "Users need to know when the model left the corpus they uploaded.",
+          result: "Source type is visible in both setup and response. [ADD METRIC]",
+        },
+        {
+          decision: "Make user groups a design surface.",
+          context: "Access usually hides in admin.",
+          tradeoff: "More concepts in the main product.",
+          reasoning:
+            "Who is in the room changes what the AI is allowed to say.",
+          result: "Membership is part of the workspace narrative, not a sidecar.",
+        },
+        {
+          decision: "Progressive assembly instead of a blank canvas.",
+          context: "Empty states photograph well and teach poorly.",
+          tradeoff: "Guided structure versus total flexibility on day one.",
+          reasoning:
+            "The product is a system. The UI should teach the system by building it.",
+          result: "The same model is used in this case study and in the product.",
+        },
+      ],
+    },
+    {
+      type: "impact",
+      id: "impact",
+      nav: "impact",
+      title: "What changed?",
+      metrics: [
+        { value: "[ADD METRIC]", label: "Time to first trusted answer" },
+        { value: "[ADD METRIC]", label: "Setup completion" },
+        { value: "[ADD METRIC]", label: "Source-attached responses" },
+      ],
+      qualitative: [
+        "Knowledge work moved from a chat overlay to a permissioned workspace.",
+        "Agent setup became inspectable by the people who actually ask questions.",
+      ],
+      before: ["Fragmented", "Opaque permissions", "Prompt-first"],
+      after: ["Connected", "Visible sources", "Workspace-first"],
+      business: "[ADD BUSINESS IMPACT]",
+      user: "Fewer context switches between files, chat, and admin.",
+      product: "A durable object model: workspace, sources, agent, group.",
+      design: "A system that can be taught by assembling it.",
+    },
+    {
+      type: "learnings",
+      id: "learnings",
+      nav: "impact",
+      kicker: "Reflection",
+      title: "Enterprise AI fails when the interface pretends the system is simple.",
+      body: [
+        "The work was not to make the model look magical. It was to make the room honest.",
+        "[ADD LEARNING FROM LAUNCH]",
+      ],
+    },
+    { type: "next-project", id: "next" },
+  ],
+};
