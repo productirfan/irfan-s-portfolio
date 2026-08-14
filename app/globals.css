@@ -77,33 +77,33 @@ html {
   display: none;
 }
 
-/* Light grey diagonal — side rails */
+/* Soft light grey diagonal — mid bands */
 .diagonal-hatch {
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0,
     transparent 7px,
-    rgba(160, 160, 160, 0.18) 7px,
-    rgba(160, 160, 160, 0.18) 8px
+    rgba(140, 140, 140, 0.14) 7px,
+    rgba(140, 140, 140, 0.14) 8px
   );
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-/* Light grey dots — mid bands */
+/* Soft light grey dots — side rails */
 .dot-pattern {
   background-image: radial-gradient(
     circle at center,
-    rgba(160, 160, 160, 0.28) 1.25px,
+    rgba(140, 140, 140, 0.22) 1.25px,
     transparent 1.35px
   );
   background-size: 14px 14px;
   background-position: center;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-/* Vertical side rails — 60px thick */
+/* Vertical side rails — 72px thick */
 .dot-rail {
-  width: 60px;
+  width: 72px;
   background-color: transparent;
 }
 

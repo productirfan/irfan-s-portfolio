@@ -21,7 +21,7 @@ const reach = [
 ] as const;
 
 function DotBand() {
-  return <div aria-hidden className="dot-band dot-pattern" />;
+  return <div aria-hidden className="dot-band diagonal-hatch" />;
 }
 
 function Content({ children }: { children: ReactNode }) {
@@ -37,14 +37,14 @@ export default function Home() {
     <div className="relative min-h-screen overflow-x-hidden bg-[#101012] text-white">
       <div
         aria-hidden
-        className="dot-rail diagonal-hatch pointer-events-none absolute inset-y-0 left-0 z-0 hidden border-r border-[#1b1b1b] md:block"
+        className="dot-rail dot-pattern pointer-events-none absolute inset-y-0 left-0 z-0 hidden border-r border-[#1b1b1b] md:block"
       />
       <div
         aria-hidden
-        className="dot-rail diagonal-hatch pointer-events-none absolute inset-y-0 right-0 z-0 hidden border-l border-[#1b1b1b] md:block"
+        className="dot-rail dot-pattern pointer-events-none absolute inset-y-0 right-0 z-0 hidden border-l border-[#1b1b1b] md:block"
       />
 
-      <div className="relative z-10 pb-32 pt-12 md:mx-[60px] md:pt-16">
+      <div className="relative z-10 pb-32 pt-12 md:mx-[72px] md:pt-16">
         <Content>
           <div className="flex items-start justify-between gap-4">
             <ProfilePortrait />
