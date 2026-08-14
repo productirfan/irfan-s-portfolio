@@ -1,11 +1,11 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { ExperienceList } from "@/components/ui/ExperienceList";
-import { FeaturedWorkCard } from "@/components/ui/WorkRow";
+import { CaseStudyStack } from "@/components/ui/CaseStudyStack";
 import { ProfilePortrait } from "@/components/ui/ProfilePortrait";
 import { SitePreviewLink } from "@/components/ui/SitePreviewLink";
+import { StacksBento } from "@/components/ui/StacksBento";
 import { TestimonialCarousel } from "@/components/ui/TestimonialCarousel";
-import { projects } from "@/content/projects";
 import { site } from "@/content/site";
 
 const socials = [
@@ -48,30 +48,33 @@ export default function Home() {
 
       <div className="relative z-10 pb-32 pt-12 md:mx-[72px] md:pt-16">
         <Content>
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-3 sm:gap-4">
             <ProfilePortrait />
             {site.available ? (
-              <p className="flex items-center gap-2.5 pt-1 text-[14px] leading-7">
-                <span className="status-dot" aria-hidden />
-                <span className="status-flash">Looking for a Remote Role</span>
+              <p className="flex min-w-0 max-w-[58%] items-center gap-2 pt-1 text-[12px] leading-5 sm:max-w-none sm:gap-2.5 sm:text-[14px] sm:leading-7">
+                <span className="status-dot shrink-0" aria-hidden />
+                <span className="status-flash text-right sm:text-left">
+                  Looking for a Remote Role
+                </span>
               </p>
             ) : null}
           </div>
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_176px] lg:gap-16">
             <div>
-              <h1 className="font-display text-[26px] text-white sm:text-[28px]">
+              <h1 className="font-display text-[22px] text-white sm:text-[26px] lg:text-[28px]">
                 {site.greeting}
               </h1>
-              <p className="mt-4 max-w-[688px] text-[17px] font-light leading-7 text-[#818181] sm:text-[18px]">
+              <p className="mt-4 max-w-[688px] text-[15px] font-light leading-6 text-white/60 sm:text-[17px] sm:leading-7 lg:text-[18px]">
                 <span>A </span>
                 <span className="text-white">Product Designer</span>
                 <span> at </span>
                 <SitePreviewLink
                   href="https://www.scryai.com"
                   label={site.company}
-                  domain="www.scryai.com"
-                  previewSrc="/previews/scryai.jpg"
+                  domain="scryai.com"
+                  logoSrc="/org/scry.svg"
+                  description="Product design · Enterprise AI"
                   icon={
                     <Image
                       src="/figma/scry.svg"
@@ -101,7 +104,7 @@ export default function Home() {
                 </span>
               </p>
 
-              <p className="mt-[62px] flex max-w-[640px] flex-wrap items-center gap-x-1.5 gap-y-2 text-[17px] font-light leading-7 text-[#818181] sm:text-[18px]">
+              <p className="mt-10 flex max-w-[640px] flex-wrap items-center gap-x-1.5 gap-y-2 text-[15px] font-light leading-6 text-white/60 sm:mt-[62px] sm:text-[17px] sm:leading-7 lg:text-[18px]">
                 <span>Reach out to me via a</span>
                 {reach.map((item, i) => (
                   <span
@@ -125,7 +128,7 @@ export default function Home() {
                       {item.label}
                     </a>
                     {i === 2 ? (
-                      <span className="text-[#818181]"> or</span>
+                      <span className="text-white/60"> or</span>
                     ) : null}
                   </span>
                 ))}
@@ -137,7 +140,7 @@ export default function Home() {
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className="flex min-w-[140px] items-center justify-between gap-4 text-[16px] font-light text-[#818181] transition hover:text-white lg:w-full"
+                    className="flex min-w-[140px] items-center justify-between gap-4 text-[16px] font-light text-white/60 transition hover:text-white lg:w-full"
                     {...(item.external
                       ? { target: "_blank", rel: "noreferrer" }
                       : {})}
@@ -166,13 +169,8 @@ export default function Home() {
             <h2 className="font-display text-[22px] text-white sm:text-[24px]">
               Selected Projects
             </h2>
-            <p className="mt-[18px] max-w-[688px] text-[17px] font-light leading-7 text-[#b2b2b2] sm:text-[18px]">
-              Below are some select projects, full walkthroughs on request
-            </p>
-            <div className="mt-8 space-y-5">
-              {projects.slice(0, 3).map((project) => (
-                <FeaturedWorkCard key={project.slug} project={project} />
-              ))}
+            <div className="mt-10">
+              <CaseStudyStack />
             </div>
           </section>
         </Content>
@@ -199,6 +197,19 @@ export default function Home() {
             <TestimonialCarousel />
           </div>
         </Content>
+
+        <div className="mt-24 sm:mt-28">
+          <DotBand />
+        </div>
+
+        <Content>
+          <div className="mt-24 pb-8 sm:mt-28">
+            <StacksBento />
+          </div>
+        </Content>
+
+        {/* Dock “About” lands at page end (above floating dock padding) */}
+        <div id="about" className="h-px w-full scroll-mt-24" aria-hidden />
       </div>
     </div>
   );

@@ -5,170 +5,174 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
-  type PointerEvent as ReactPointerEvent,
+  type FocusEvent,
   type ReactNode,
 } from "react";
-import { createPortal } from "react-dom";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
 type SitePreviewLinkProps = {
   href: string;
   label: string;
-  previewSrc: string;
+  /** Short context under the company name */
+  description?: string;
   icon?: ReactNode;
+  /** Path to logo shown in the peek panel */
+  logoSrc?: string;
   domain?: string;
 };
 
+const OPEN_DELAY_MS = 180;
+const CLOSE_DELAY_MS = 140;
+const PANEL_WIDTH = 300;
 const ease = [0.22, 1, 0.36, 1] as const;
-const MAX_TILT = 12;
-const MAX_SHIFT = 5;
+
+function hostFromHref(href: string, fallback?: string) {
+  if (fallback) return fallback.replace(/^https?:\/\//, "").replace(/^www\./, "");
+  try {
+    return new URL(href).hostname.replace(/^www\./, "");
+  } catch {
+    return "site";
+  }
+}
 
 export function SitePreviewLink({
   href,
   label,
-  previewSrc,
+  description = "Product design · Enterprise AI",
   icon,
-  domain = "scryai.com",
+  logoSrc = "/org/scry.svg",
+  domain,
 }: SitePreviewLinkProps) {
   const reduce = useReducedMotion();
-  const triggerRef = useRef<HTMLAnchorElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const showTimer = useRef<number | null>(null);
   const hideTimer = useRef<number | null>(null);
   const panelId = useId();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [coords, setCoords] = useState({
-    top: 0,
-    left: 0,
-    width: 340,
-    height: 220,
-  });
+  const [placement, setPlacement] = useState<"bottom" | "top">("bottom");
+  const [leftPx, setLeftPx] = useState(0);
 
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-  const spring = { stiffness: 160, damping: 16, mass: 0.35 };
-  const x = useSpring(rawX, spring);
-  const y = useSpring(rawY, spring);
-  const rotateY = useTransform(x, [-0.5, 0.5], [-MAX_TILT, MAX_TILT]);
-  const rotateX = useTransform(y, [-0.5, 0.5], [MAX_TILT, -MAX_TILT]);
-  const translateX = useTransform(x, [-0.5, 0.5], [-MAX_SHIFT, MAX_SHIFT]);
-  const translateY = useTransform(y, [-0.5, 0.5], [-MAX_SHIFT, MAX_SHIFT]);
-  const glareX = useTransform(x, [-0.5, 0.5], [18, 82]);
-  const glareY = useTransform(y, [-0.5, 0.5], [18, 82]);
-  const glareBg = useTransform(
-    [glareX, glareY],
-    ([gx, gy]) =>
-      `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.22), transparent 52%)`,
-  );
+  const displayHost = hostFromHref(href, domain);
 
-  const resetTilt = () => {
-    rawX.set(0);
-    rawY.set(0);
-  };
-
-  useEffect(() => setMounted(true), []);
-
-  const clearTimers = () => {
+  const clearTimers = useCallback(() => {
     if (showTimer.current) window.clearTimeout(showTimer.current);
     if (hideTimer.current) window.clearTimeout(hideTimer.current);
     showTimer.current = null;
     hideTimer.current = null;
-  };
-
-  const measure = useCallback(() => {
-    const trigger = triggerRef.current;
-    if (!trigger) return;
-
-    const rect = trigger.getBoundingClientRect();
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    // ~15% viewport area, header/widescreen crop
-    const area = vw * vh * 0.15;
-    const width = Math.min(420, Math.max(300, Math.round(Math.sqrt(area * 1.7))));
-    const height = Math.min(280, Math.max(180, Math.round(width * 0.58)));
-
-    let left = rect.left + rect.width / 2 - width / 2;
-    left = Math.max(16, Math.min(left, vw - width - 16));
-
-    const below = rect.bottom + 16;
-    const above = rect.top - height - 16;
-    const top =
-      below + height <= vh - 16
-        ? below
-        : above >= 16
-          ? above
-          : Math.max(16, (vh - height) / 2);
-
-    setCoords({ top, left, width, height });
   }, []);
 
-  const openPreview = useCallback(() => {
-    clearTimers();
-    measure();
-    showTimer.current = window.setTimeout(() => setOpen(true), 100);
-  }, [measure]);
-
-  const closePreview = useCallback(() => {
-    clearTimers();
-    hideTimer.current = window.setTimeout(() => {
-      setOpen(false);
-      resetTilt();
-    }, 120);
+  const precomputeLeft = useCallback(() => {
+    if (!rootRef.current) return;
+    const trigger = rootRef.current.getBoundingClientRect();
+    const root = rootRef.current.getBoundingClientRect();
+    const pad = 12;
+    const width = Math.min(PANEL_WIDTH, window.innerWidth - pad * 2);
+    const idealCenter = trigger.left + trigger.width / 2 - root.left;
+    const left = idealCenter - width / 2;
+    const minLeft = pad - root.left;
+    const maxLeft = window.innerWidth - pad - width - root.left;
+    setLeftPx(Math.min(Math.max(left, minLeft), maxLeft));
   }, []);
+
+  const openPeek = useCallback(() => {
+    clearTimers();
+    showTimer.current = window.setTimeout(() => {
+      precomputeLeft();
+      setOpen(true);
+    }, OPEN_DELAY_MS);
+  }, [clearTimers, precomputeLeft]);
+
+  const closePeek = useCallback(() => {
+    clearTimers();
+    hideTimer.current = window.setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
+  }, [clearTimers]);
+
+  const keepOpen = useCallback(() => {
+    clearTimers();
+    setOpen(true);
+  }, [clearTimers]);
 
   useEffect(() => {
     if (!open) return;
-    const onScroll = () => measure();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        clearTimers();
         setOpen(false);
-        resetTilt();
+        rootRef.current?.querySelector<HTMLElement>("a[data-peek-trigger]")?.focus();
       }
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
     window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, clearTimers]);
+
+  useEffect(() => () => clearTimers(), [clearTimers]);
+
+  useLayoutEffect(() => {
+    if (!open || !rootRef.current) return;
+
+    const measure = () => {
+      const trigger = rootRef.current!.getBoundingClientRect();
+      const root = rootRef.current!.getBoundingClientRect();
+      const panelH = panelRef.current?.offsetHeight ?? 120;
+      const gap = 10;
+      const pad = 12;
+      const width = Math.min(PANEL_WIDTH, window.innerWidth - pad * 2);
+
+      const spaceBelow = window.innerHeight - trigger.bottom - gap;
+      const spaceAbove = trigger.top - gap;
+      setPlacement(
+        spaceBelow < panelH && spaceAbove > spaceBelow ? "top" : "bottom",
+      );
+
+      // Position relative to the root span
+      const idealCenter = trigger.left + trigger.width / 2 - root.left;
+      let left = idealCenter - width / 2;
+      const minLeft = pad - root.left;
+      const maxLeft = window.innerWidth - pad - width - root.left;
+      left = Math.min(Math.max(left, minLeft), maxLeft);
+      setLeftPx(left);
     };
-  }, [open, measure]);
 
-  useEffect(() => () => clearTimers(), []);
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", measure, true);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", measure, true);
+    };
+  }, [open]);
 
-  const onMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (reduce) return;
-    const el = cardRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    rawX.set((e.clientX - r.left) / r.width - 0.5);
-    rawY.set((e.clientY - r.top) / r.height - 0.5);
+  const onRootBlur = (e: FocusEvent<HTMLSpanElement>) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && rootRef.current?.contains(next)) return;
+    closePeek();
   };
 
+  const rise = placement === "bottom" ? 5 : -5;
+  const exitY = placement === "bottom" ? 4 : -4;
+
   return (
-    <>
+    <span
+      ref={rootRef}
+      className="relative inline-flex align-middle"
+      onMouseEnter={openPeek}
+      onMouseLeave={closePeek}
+      onFocusCapture={openPeek}
+      onBlurCapture={onRootBlur}
+    >
       <a
-        ref={triggerRef}
+        data-peek-trigger
         href={href}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
+        aria-expanded={open}
+        aria-controls={panelId}
         aria-describedby={open ? panelId : undefined}
         className="group/site relative inline-flex items-center gap-1.5 align-middle text-white transition-colors"
-        onMouseEnter={openPreview}
-        onMouseLeave={closePreview}
-        onFocus={openPreview}
-        onBlur={closePreview}
       >
         {icon}
         <span className="underline decoration-white/0 decoration-from-font underline-offset-[5px] transition group-hover/site:decoration-white/45">
@@ -176,88 +180,82 @@ export function SitePreviewLink({
         </span>
       </a>
 
-      {mounted
-        ? createPortal(
-            <AnimatePresence>
-              {open ? (
-                <motion.div
-                  id={panelId}
-                  role="tooltip"
-                  aria-label={`${label} website preview`}
-                  className="pointer-events-auto fixed z-[80]"
-                  style={{
-                    top: coords.top,
-                    left: coords.left,
-                    width: coords.width,
-                    height: coords.height,
-                    perspective: 900,
-                  }}
-                  initial={
-                    reduce
-                      ? { opacity: 1 }
-                      : { opacity: 0, y: 12, scale: 0.92 }
-                  }
-                  animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.3, ease }}
-                  onMouseEnter={() => {
-                    clearTimers();
-                    setOpen(true);
-                  }}
-                  onMouseLeave={closePreview}
-                >
-                  <motion.div
-                    ref={cardRef}
-                    onPointerMove={onMove}
-                    onPointerLeave={resetTilt}
-                    style={
-                      reduce
-                        ? undefined
-                        : {
-                            rotateX,
-                            rotateY,
-                            x: translateX,
-                            y: translateY,
-                            transformStyle: "preserve-3d",
-                          }
-                    }
-                    className="relative h-full overflow-hidden rounded-2xl bg-[#121214] shadow-[0_28px_90px_rgba(0,0,0,0.55)]"
-                  >
-                    <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-2 bg-[#161618]/92 px-3 py-2 backdrop-blur-md">
-                      <div className="flex gap-1.5" aria-hidden>
-                        <span className="size-2.5 rounded-full bg-[#ff5f57]/90" />
-                        <span className="size-2.5 rounded-full bg-[#febc2e]/90" />
-                        <span className="size-2.5 rounded-full bg-[#28c840]/90" />
-                      </div>
-                      <div className="ml-1 flex min-w-0 flex-1 rounded-full bg-black/40 px-3 py-1 text-[11px] text-[#9a9a9a]">
-                        <span className="truncate">https://{domain}</span>
-                      </div>
-                    </div>
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            key="company-peek"
+            ref={panelRef}
+            id={panelId}
+            role="region"
+            aria-label={`${label} — company details`}
+            className={`absolute z-[60] w-[min(92vw,300px)] ${
+              placement === "bottom"
+                ? "top-[calc(100%+10px)]"
+                : "bottom-[calc(100%+10px)]"
+            }`}
+            style={{ left: leftPx }}
+            initial={reduce ? { opacity: 1 } : { opacity: 0, y: rise }}
+            animate={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: exitY }}
+            transition={{ duration: 0.2, ease }}
+            onMouseEnter={keepOpen}
+            onMouseLeave={closePeek}
+          >
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/peek block overflow-hidden rounded-2xl border border-white/10 bg-[#18181b]/92 px-3.5 pt-3.5 pb-3 shadow-[0_16px_48px_rgba(0,0,0,0.5)] outline-none backdrop-blur-md transition hover:border-white/[0.14] hover:bg-[#1a1a1c]/95 focus-visible:ring-2 focus-visible:ring-white/30"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/[0.06] ring-1 ring-white/10">
+                  <Image
+                    src={logoSrc}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="size-6"
+                  />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="truncate text-[14px] font-medium text-white">
+                      {label}
+                    </span>
+                    <ExternalCue />
+                  </div>
+                  <p className="mt-0.5 truncate text-[12px] leading-4 text-[#8a8a8e]">
+                    {description}
+                  </p>
+                </div>
+              </div>
 
-                    <div className="relative h-full w-full overflow-hidden pt-9">
-                      <Image
-                        src={previewSrc}
-                        alt={`${label} homepage header`}
-                        fill
-                        sizes="420px"
-                        className="object-cover object-top select-none"
-                        draggable={false}
-                        priority={false}
-                      />
-                    </div>
+              <span className="mt-3 flex h-9 w-full items-center justify-center rounded-full bg-white text-[13px] font-medium text-[#111] transition group-hover/peek:bg-white/92">
+                Visit {displayHost}
+              </span>
+            </a>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </span>
+  );
+}
 
-                    <motion.div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 mix-blend-soft-light"
-                      style={reduce ? undefined : { background: glareBg }}
-                    />
-                  </motion.div>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>,
-            document.body,
-          )
-        : null}
-    </>
+function ExternalCue() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 12 12"
+      className="size-3 shrink-0 text-white/40"
+      fill="none"
+    >
+      <path
+        d="M4.5 2.5H2.75A.75.75 0 0 0 2 3.25v6a.75.75 0 0 0 .75.75h6a.75.75 0 0 0 .75-.75V7.5M7 2h3v3M5.5 6.5 10 2"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

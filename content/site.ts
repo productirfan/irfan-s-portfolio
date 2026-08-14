@@ -69,6 +69,17 @@ export const site = {
       avatarTone: "#8FA88A",
       companyLogo: "/org/scry.svg",
     },
+    {
+      id: "sara",
+      quote:
+        "Irfan treats product constraints as design material. Our launch felt intentional — every flow earned its place, nothing felt bolted on.",
+      name: "Sara Ali",
+      role: "Founder",
+      company: "Studio",
+      initials: "SA",
+      avatarTone: "#9B8EC4",
+      companyLogo: "/org/studio.svg",
+    },
   ],
   about: {
     headline: "Thank you for visiting my little corner of the internet",
