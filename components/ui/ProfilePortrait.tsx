@@ -54,14 +54,11 @@ export function ProfilePortrait() {
       `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.26), transparent 52%)`,
   );
 
-  const resetTilt = () => {
-    rawX.set(0);
-    rawY.set(0);
-  };
-
   useEffect(() => {
+    const trigger = triggerRef.current;
     if (!open) {
-      resetTilt();
+      rawX.set(0);
+      rawY.set(0);
       return;
     }
     const prev = document.body.style.overflow;
@@ -74,10 +71,16 @@ export function ProfilePortrait() {
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
-      triggerRef.current?.focus();
-      resetTilt();
+      trigger?.focus();
+      rawX.set(0);
+      rawY.set(0);
     };
-  }, [open]);
+  }, [open, rawX, rawY]);
+
+  const resetTilt = () => {
+    rawX.set(0);
+    rawY.set(0);
+  };
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
     if (reduce) return;

@@ -46,7 +46,7 @@ export default async function CaseStudyPage({ params }: Props) {
     <DocumentShell
       crumbs={[
         { href: "/", label: "Home" },
-        { href: "/work", label: "Works" },
+        { href: "/#experience", label: "Work" },
         { label: project.title },
       ]}
       toc={caseNav}
